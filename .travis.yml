@@ -1,0 +1,21 @@
+language: node_js #hangi programlaa dili ile uygulamamızı yazdığımız
+node_js: #nodejs'in hangi versiyonunu kullandığımız
+  - '10'
+dist: trusty #makinede kullanılacak işletim sistemi, trusty ise linux'ın bir türevi
+services: #uygulamamızda kullandığımız servisler
+  - mongodb
+  - redis-server
+env: #enviremonet değişkenlerinimizin neler olduğu
+  - NODE_ENV=ci
+  - PORT=3000
+cache: #Bir kere yüklendikten sonra depolamasını ve tekrar tekrara yüklenmemesini istediğimiz şeyler
+  directories:
+    - node_modules
+    - client/node_modules
+install: # npm kodlarımızı çalıştırabileceğimiz kısım
+  - npm install
+  - npm run build
+script:
+  - nohup npm run start & #nohup -> shell kapansa da çalışsın &-> arkaplanda çalışssın
+  - sleep 3 #Testi başlatmadan önce serverin tam anlamıyla açılmış olması için 3 saniye bekliyoruz
+  - npm run test #Tüm ayarları yaptıktan sonra artık test'imizi çalıştırabiliriz
